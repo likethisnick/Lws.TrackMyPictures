@@ -4,6 +4,19 @@
              xmlns:local="clr-namespace:Lws.TrackMyPictures"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
+        
+        
+        
+        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomizedWindow/TMPStyle.xaml" />
+                <ResourceDictionary Source="/Styles/CustomizedCombobox/MyRes1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
+    
+    
 </Application>
+    
