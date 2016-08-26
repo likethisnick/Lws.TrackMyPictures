@@ -31,29 +31,55 @@ namespace Lws.TrackMyPictures
             MainMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
             MainMap.IgnoreMarkerOnMouseWheel = true;
             MainMap.ShowCenter = false;
-            MainMap.MapProvider = GMapProviders.GoogleMap;
+            MainMap.MapProvider = GMapProviders.OpenStreetMap;
             GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
             PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Ukraine, Kyiv", out status);
             MainMap.Position = new PointLatLng(pos.Value.Lat, pos.Value.Lng);
             MainMap.MinZoom = 0;
             MainMap.MaxZoom = 24;
             MainMap.Zoom = 9;
+            i = 0;
+
+
+            
+            MapComboBox.DisplayMemberPath = "Name";
+            MapComboBox.Items[0] = GMapProviders.GoogleMap;
+            MapComboBox.Items[1] = GMapProviders.YandexMap;
+            MapComboBox.Items[2] = GMapProviders.OpenStreetMap;
+            MapComboBox.Items[3] = GMapProviders.BingMap;
+            MapComboBox.SelectedItem = MainMap.MapProvider;
         }
+
+        public int i;
+
 
         private void btnLeftMenuShow_Click(object sender, RoutedEventArgs e)
         {
-            ShowHideMenu("sbShowLeftMenu", btnLeftMenuHide, btnLeftMenuShow, pnlLeftMenu);
+            if (i==0)
+            {
+                ShowHideMenu("sbShowLeftMenu", "LblLeft",btnLeftMenuHide, btnLeftMenuShow, pnlLeftMenu, StackLabel);
+                i++;
+                this.DataContext = i;
+            }
+           
         }
 
         private void btnLeftMenuHide_Click(object sender, RoutedEventArgs e)
         {
-            ShowHideMenu("sbHideLeftMenu", btnLeftMenuHide, btnLeftMenuShow, pnlLeftMenu);
+            if (i == 1)
+            {
+                ShowHideMenu("sbHideLeftMenu", "LblRight", btnLeftMenuHide, btnLeftMenuShow, pnlLeftMenu, StackLabel);
+                i--;
+                this.DataContext = i;
+            }
         }
 
-        private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
+        private void ShowHideMenu(string Storyboard, string lblSb, Button btnHide, Button btnShow, StackPanel pnl, StackPanel label)
         {
             Storyboard sb = Resources[Storyboard] as Storyboard;
+            Storyboard sbb = Resources[lblSb] as Storyboard;
             sb.Begin(pnl);
+            sbb.Begin(label);
 
             if (Storyboard.Contains("Show"))
             {
@@ -67,6 +93,29 @@ namespace Lws.TrackMyPictures
             }
         }
 
-        
+        /* LATER MAKE CHOOSEN ITEM DISSAPEAR FROM LIST
+
+        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            for (int i = 0; i <= MapComboBox.Items.Count - 1; i++)
+            {
+                if (((ComboBoxItem)(MapComboBox.Items[i])).Content == ((ComboBoxItem)MapComboBox.SelectedItem).Content)
+                {
+                    ((ComboBoxItem)(MapComboBox.Items[i])).Visibility = System.Windows.Visibility.Collapsed;
+                }
+                else
+                    ((ComboBoxItem)(MapComboBox.Items[i])).Visibility = System.Windows.Visibility.Visible;
+            }
+        } */
+
+        private void Grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void MainMap_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btnLeftMenuHide_Click(sender, e);
+        }
     }
 }
