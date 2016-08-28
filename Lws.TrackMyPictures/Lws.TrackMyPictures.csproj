@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,6 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PhotoMarker.xaml.cs">
+      <DependentUpon>PhotoMarker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Source\Map.cs" />
     <Compile Include="Styles\CustomizedCombobox\MyComboBox.xaml.cs">
       <DependentUpon>MyComboBox.xaml</DependentUpon>
@@ -85,6 +89,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PhotoMarker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\CustomizedCombobox\MyComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +135,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Resource Include="Styles\ico_back.png" />
+    <Resource Include="Styles\zoom_in.png" />
+    <Resource Include="Styles\zoom_out.png" />
+    <Resource Include="123.JPG" />
     <Content Include="External\ExifLib.dll" />
     <Content Include="External\GMap.NET.Core.dll" />
     <Content Include="External\GMap.NET.WindowsPresentation.dll" />
