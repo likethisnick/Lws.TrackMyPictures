@@ -5,6 +5,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using GMap.NET.WindowsPresentation;
 using System.Diagnostics;
+using System;
+using System.IO;
+using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace Lws.TrackMyPictures
 {
@@ -17,16 +21,46 @@ namespace Lws.TrackMyPictures
         Label Label;
         GMapMarker Marker;
         MainWindow MainWindow;
+        public int Number;
+        public double fllength;
+        public int photoWidth;
+        public int photoHeight;
+        public string Place;
+        public double Lat;
+        public double Long;
+        public string Date;
+        public string CameraInfo;
+        public string CameraInfoAdd;
+        public string Extension;
         public string path
         { get; set; }
 
-        public PhotoMarker(MainWindow window, GMapMarker marker, string title)
+        public PhotoMarker(MainWindow window, GMapMarker marker, string Adress, int PhotoCounter, ExifInfo exifInfo)
         {
             this.InitializeComponent();
             DataContext = this;
-            this.MainWindow = window;
             this.Marker = marker;
-            path = title;
+            this.MainWindow = window;
+            Extension = exifInfo.Extension;
+            photoWidth = exifInfo.width;
+            photoHeight = exifInfo.heigh;
+            CameraInfo = exifInfo.CameraInfo;
+            CameraInfoAdd = exifInfo.CameraInfoAdd;
+            Place = exifInfo.photoPlace;
+            Date = exifInfo.photoTime;
+            Lat = exifInfo.Lat;
+            Long = exifInfo.Long;
+
+
+
+            fllength = new System.IO.FileInfo(Adress).Length;
+            // ???????????????? в одном МБ 1048576 байт
+            fllength = fllength / 1048576;
+
+
+            Number = PhotoCounter;
+            
+            path = Adress;
             Popup = new Popup();
             Label = new Label();
 
@@ -54,13 +88,33 @@ namespace Lws.TrackMyPictures
             Label = null;
         }
 
-        void PhotoMarker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void PhotoMarker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            MainWindow.MainMap.CanDragMap = false; // fix of map bug
 
-                MainWindow.MapGrid.Visibility = Visibility.Hidden;
-            MainWindow.MainMap.CanDragMap = false;
+            MainWindow.pathh = path;
+              MainWindow.MapGrid.Visibility = Visibility.Hidden;
+               
                 MainWindow.MarkerGrid.Visibility = Visibility.Visible;
-            
+            MainWindow.ChoosenOne = this;
+            MainWindow.lblFileName.Content = Path.GetFileName(path);
+            MainWindow.ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(path)));
+                ImageBrush[] a = new ImageBrush[MainWindow.MainMap.Markers.Count];
+
+            MainWindow.lblPhotoPlace.Text = Place;
+            MainWindow.lblDateTime.Text = Date;
+            MainWindow.lblPhotoExtension.Content = Extension + ", " + Math.Round(fllength, 2) + " MB";
+            MainWindow.lblRes.Content = photoWidth + "x" + photoHeight;
+            MainWindow.lblCameraInfo.Content = CameraInfo;
+            MainWindow.lblCameraAddInfo.Content = CameraInfoAdd;
+
+
+        }
+
+
+        public void ass()
+        {
+            System.Windows.Forms.MessageBox.Show("Test");
         }
 
 

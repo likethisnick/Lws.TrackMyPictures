@@ -25,12 +25,17 @@ namespace Lws.TrackMyPictures
     public partial class MainWindow : Window
     {
         // marker
-        GMapMarker currentMarker;
+        public PhotoMarker ChoosenOne;
         GeoCoderStatusCode status;
         List<string> myAdressList = new List<string>();
+        List<PhotoMarker> myphotoMarkerList = new List<PhotoMarker>();
         int photoCounter;
         public int i;
 
+        public string pathh
+        {
+            get; set;
+        }
         public string path
         {
             get; set;
@@ -56,20 +61,12 @@ namespace Lws.TrackMyPictures
             photoCounter = 0;
             i = 0;
 
-
             MapComboBox.DisplayMemberPath = "Name";
             MapComboBox.Items[0] = GMapProviders.GoogleMap;
             MapComboBox.Items[1] = GMapProviders.YandexMap;
             MapComboBox.Items[2] = GMapProviders.OpenStreetMap;
             MapComboBox.Items[3] = GMapProviders.BingMap;
             MapComboBox.SelectedItem = MainMap.MapProvider;
-
-            currentMarker = new GMapMarker(MainMap.Position);
-            {
-                currentMarker.Offset = new System.Windows.Point(-15, -15);
-                currentMarker.ZIndex = int.MaxValue;
-                MainMap.Markers.Add(currentMarker);
-            }
 
             
 
@@ -79,6 +76,7 @@ namespace Lws.TrackMyPictures
 
         private void btnLeftMenuShow_Click(object sender, RoutedEventArgs e)
         {
+
             if (i==0)
             {
 
@@ -98,6 +96,7 @@ namespace Lws.TrackMyPictures
 
         private void btnInfoShow_Click(object sender, RoutedEventArgs e)
         {
+ 
             if (i == 0)
             {
                 ShowHideInfo("sbShowInfo", btnInfoHide, btnInfoShow, PhotoInfoPanel);
@@ -107,6 +106,7 @@ namespace Lws.TrackMyPictures
 
         private void btnInfoHide_Click(object sender, RoutedEventArgs e)
         {
+        
             if (i == 1)
             {
                 ShowHideInfo("sbHideInfo", btnInfoHide, btnInfoShow, PhotoInfoPanel);
@@ -200,14 +200,24 @@ namespace Lws.TrackMyPictures
             return tagValue.ToString();
         }
 
-        double TenLats;
-        double TenLongs;
 
-        public double[] OF(object filename)
+
+        public ExifInfo OF(object filename)
         {
+            
+
+            ExifInfo exifInfo = new ExifInfo();
+
             path = (string)filename;
+
+            // File Extension
+            exifInfo.Extension = Path.GetExtension(path).Replace(".", "");
+            
+
                     using (var reader = new ExifReader(path))
                     {
+
+                // File Lattitude
                         object GPSLatitude;
                         if (reader.GetTagValue(ExifTags.GPSLatitude, out GPSLatitude))
                         {
@@ -219,9 +229,9 @@ namespace Lws.TrackMyPictures
                             myLats[0] = Convert.ToDouble(GPSlats[1]);
                             myLats[1] = Convert.ToDouble(GPSlats[2]);
                             myLats[2] = Convert.ToDouble(GPSlats[3]);
-                            TenLats = myLats[0] + myLats[1] / 60 + myLats[2] / 3600;
+                            exifInfo.Lat = myLats[0] + myLats[1] / 60 + myLats[2] / 3600;
                         }
-
+                // File Longtitude
                         object GPSLongitude;
                         if (reader.GetTagValue(ExifTags.GPSLongitude, out GPSLongitude))
                         {
@@ -233,13 +243,44 @@ namespace Lws.TrackMyPictures
                             myLongs[0] = Convert.ToDouble(GPSLongs[1]);
                             myLongs[1] = Convert.ToDouble(GPSLongs[2]);
                             myLongs[2] = Convert.ToDouble(GPSLongs[3]);
-                            TenLongs = myLongs[0] + myLongs[1] / 60 + myLongs[2] / 3600;
+                            exifInfo.Long = myLongs[0] + myLongs[1] / 60 + myLongs[2] / 3600;
                         }
+    // File Photo Taken DataTime
+                object PhotoDateTime;
+                if (reader.GetTagValue(ExifTags.DateTime, out PhotoDateTime))
+                {
+                    string pT = string.Format(PhotoDateTime+"");
 
-                        DateTime datePictureTaken;
-                        reader.GetTagValue(ExifTags.DateTimeOriginal, out datePictureTaken);
-                double[] Coordinates = { TenLats, TenLongs };
-                return Coordinates;
+                    exifInfo.photoTime = pT;
+                }
+     // File Width
+                object PixelXDimension;
+                if (reader.GetTagValue(ExifTags.PixelXDimension, out PixelXDimension))
+                {
+                    UInt32 a = (UInt32)PixelXDimension;
+                    exifInfo.width = (int)a;
+                }
+       // File Heigh
+                object PixelYDimension;
+                if (reader.GetTagValue(ExifTags.PixelYDimension, out PixelYDimension))
+                {
+                    UInt32 a = (UInt32)PixelYDimension;
+                    exifInfo.heigh = (int)a;
+                }
+      // File Camera Info
+                object CameraInfo;
+                if (reader.GetTagValue(ExifTags.Model, out CameraInfo))
+                {
+                    exifInfo.CameraInfo = (string)CameraInfo;
+                }
+
+                object CameraInfoAdd;
+                if (reader.GetTagValue(ExifTags.DeviceSettingDescription, out CameraInfoAdd))
+                {
+                    exifInfo.CameraInfoAdd = (string)CameraInfoAdd;
+                }
+
+                return exifInfo;
             }        
             }
 
@@ -269,8 +310,8 @@ namespace Lws.TrackMyPictures
             int SameFile = 0;
             for (int i = 0; i < files.Length; i++)
             {
-                
-                double[] coords = OF(files[i]);
+                ExifInfo exInfo = new ExifInfo();
+                exInfo = OF(files[i]);
 
                 if (myAdressList.Contains(files[i]))
                 {
@@ -280,11 +321,25 @@ namespace Lws.TrackMyPictures
                 myAdressList.Add(files[i]);
                
                 PointLatLng LLTpointer = new PointLatLng();
-                LLTpointer.Lat = coords[0];
-                LLTpointer.Lng = coords[1];
+                LLTpointer.Lat = exInfo.Lat;
+                LLTpointer.Lng = exInfo.Long;
                 GMapMarker it = new GMapMarker(LLTpointer);
                 it.ZIndex = 5;
-                it.Shape = new PhotoMarker(this, it, files[i]);
+                List<Placemark> plc = null;
+                var st = GMapProviders.GoogleMap.GetPlacemarks(new PointLatLng(exInfo.Lat, exInfo.Long), out plc);
+                
+                foreach (var pl in plc)
+                {
+                    if (!string.IsNullOrEmpty(pl.PostalCodeNumber))
+                    {
+                        exInfo.photoPlace = pl.CountryName +" "+ pl.AdministrativeAreaName;
+                    }
+                }
+
+                PhotoMarker A = new PhotoMarker(this, it, files[i], photoCounter, exInfo);
+                it.Shape = A;
+                myphotoMarkerList.Add(A);
+                it.Tag = photoCounter;
                 MainMap.Markers.Add(it);
                 photoCounter++;
                 MainMap.Position = LLTpointer;
@@ -296,10 +351,111 @@ namespace Lws.TrackMyPictures
 
         private void btnBackToMap_Click(object sender, RoutedEventArgs e)
         {
-            
             MapGrid.Visibility = Visibility.Visible;
             MarkerGrid.Visibility = Visibility.Hidden;
             MainMap.CanDragMap = true;
+        }
+
+
+        private void btnToLeft_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChoosenOne == null || MainMap == null || myphotoMarkerList.Count<2)
+                return;
+
+            if (ChoosenOne.Number<MainMap.Markers.Count&&ChoosenOne.Number>0)
+            {
+                ChoosenOne = myphotoMarkerList.Find(meh => meh.Number == (ChoosenOne.Number-1));
+                lblFileName.Content = Path.GetFileName(ChoosenOne.path);
+                ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(ChoosenOne.path)));
+
+                lblCommentary.Content = ChoosenOne.Number;
+                lblDateTime.Text = ChoosenOne.Date;
+                lblPhotoPlace.Text = ChoosenOne.Place;
+                lblPhotoExtension.Content = ChoosenOne.Extension + ", " + Math.Round(ChoosenOne.fllength, 2) + " MB";
+                lblRes.Content = ChoosenOne.photoWidth + "x" + ChoosenOne.photoHeight;
+                lblCameraInfo.Content = ChoosenOne.CameraInfo;
+                lblCameraAddInfo.Content = ChoosenOne.CameraInfoAdd;
+                return;
+            }
+
+            if (ChoosenOne.Number == 0)
+            {
+                ChoosenOne = myphotoMarkerList.Find(meh => meh.Number == myphotoMarkerList.Count - 1);
+                lblFileName.Content = Path.GetFileName(ChoosenOne.path);
+                ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(ChoosenOne.path)));
+
+                lblCommentary.Content = ChoosenOne.Number;
+                lblDateTime.Text = ChoosenOne.Date;
+                lblPhotoPlace.Text = ChoosenOne.Place;
+                lblPhotoExtension.Content = ChoosenOne.Extension + ", " + Math.Round(ChoosenOne.fllength, 2) + " MB";
+                lblRes.Content = ChoosenOne.photoWidth + "x" + ChoosenOne.photoHeight;
+                lblCameraInfo.Content = ChoosenOne.CameraInfo;
+                lblCameraAddInfo.Content = ChoosenOne.CameraInfoAdd;
+            }
+
+
+        }
+
+        private void btnToRight_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChoosenOne == null||MainMap==null || myphotoMarkerList.Count<2)
+                return;
+            
+                if(ChoosenOne.Number<MainMap.Markers.Count-1&&ChoosenOne.Number>-1)
+            {
+                ChoosenOne = myphotoMarkerList.Find(meh=>meh.Number==(ChoosenOne.Number+1));
+                lblFileName.Content = Path.GetFileName(ChoosenOne.path);
+                ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(ChoosenOne.path)));
+
+                lblCommentary.Content = ChoosenOne.Number;
+                lblDateTime.Text = ChoosenOne.Date;
+                lblPhotoPlace.Text = ChoosenOne.Place;
+                lblPhotoExtension.Content = ChoosenOne.Extension + ", " + Math.Round(ChoosenOne.fllength, 2) + " MB";
+                lblRes.Content = ChoosenOne.photoWidth + "x" + ChoosenOne.photoHeight;
+                lblCameraInfo.Content = ChoosenOne.CameraInfo;
+                lblCameraAddInfo.Content = ChoosenOne.CameraInfoAdd;
+                return;
+            }
+
+            if (ChoosenOne.Number == MainMap.Markers.Count - 1)
+            {
+                ChoosenOne = myphotoMarkerList.Find(meh => meh.Number == 0);
+                lblFileName.Content = Path.GetFileName(ChoosenOne.path);
+                ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(ChoosenOne.path)));
+
+                lblCommentary.Content = ChoosenOne.Number;
+                lblDateTime.Text = ChoosenOne.Date;
+                lblPhotoPlace.Text = ChoosenOne.Place;
+                lblPhotoExtension.Content = ChoosenOne.Extension + ", " + Math.Round(ChoosenOne.fllength, 2) + " MB";
+                lblRes.Content = ChoosenOne.photoWidth + "x" + ChoosenOne.photoHeight;
+                lblCameraInfo.Content = ChoosenOne.CameraInfo;
+                lblCameraAddInfo.Content = ChoosenOne.CameraInfoAdd;
+            }
+
+
+        }
+
+        private void button10_Click(object sender, RoutedEventArgs e)
+        {
+            MainMap.Position = new PointLatLng(ChoosenOne.Lat, ChoosenOne.Long);
+            MapGrid.Visibility = Visibility.Visible;
+            MarkerGrid.Visibility = Visibility.Hidden;
+            MainMap.CanDragMap = true;
+        }
+
+        private void btnFullScr_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Maximized;
+        }
+
+        private void btnMinScr_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Normal;
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

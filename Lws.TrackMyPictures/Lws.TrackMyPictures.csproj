@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExifInfo.cs" />
     <Compile Include="PhotoMarker.xaml.cs">
       <DependentUpon>PhotoMarker.xaml</DependentUpon>
     </Compile>
@@ -136,6 +137,9 @@
   <ItemGroup />
   <ItemGroup>
     <Resource Include="Styles\ico_back.png" />
+    <Resource Include="Styles\ico_open_file.png" />
+    <Resource Include="Styles\ico_info.png" />
+    <Resource Include="Styles\ico_back3.png" />
     <Resource Include="Styles\zoom_in.png" />
     <Resource Include="Styles\zoom_out.png" />
     <Resource Include="123.JPG" />

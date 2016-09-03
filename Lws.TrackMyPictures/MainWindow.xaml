@@ -7,12 +7,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     x:Class="Lws.TrackMyPictures.MainWindow"
     Title="VS.Net Style Demo"
-    Height="481.833"
-    Width="777.65"
+    Height="600"
+    Width="800"
     MinHeight="160"
     MinWidth="260"
     AllowDrop="True"
     Icon="/mainicon.ico"
+    Background="#FF1717"
     >
 
     <Window.Resources>
@@ -33,11 +34,11 @@
         </Storyboard>
 
         <Storyboard x:Key="sbShowInfo" >
-            <ThicknessAnimation Storyboard.TargetProperty="Margin"  From="-260,48,0,0" To="0,48,0,0" DecelerationRatio="1" Duration="0:0:0.35" />
+            <ThicknessAnimation Storyboard.TargetProperty="Margin"  From="-310,48,0,0" To="0,48,0,0" DecelerationRatio="1" Duration="0:0:0.35" />
         </Storyboard>
 
         <Storyboard x:Key="sbHideInfo">
-            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,48,0,0" To="-260,48,0,0" AccelerationRatio="1" Duration="0:0:0.35" />
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,48,0,0" To="-310,48,0,0" AccelerationRatio="1" Duration="0:0:0.35" />
         </Storyboard>
 
 
@@ -52,10 +53,12 @@
 
 
 
-    <Grid x:Name="WindowGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid x:Name="WindowGrid" VerticalAlignment="Stretch" 
+          HorizontalAlignment="Stretch">
         <Rectangle Fill="#FF171717" Height="48" VerticalAlignment="Top"/>
 
-        <Grid Background="Transparent" Name="MapGrid" Visibility="Collapsed">
+        <Grid Background="Transparent" Name="MapGrid" Visibility="Hidden"
+              >
             <Grid HorizontalAlignment="Right" Height="80" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="40" Panel.ZIndex="10">
 
                 <Button x:Name="btnZoomIn" Content="Button" Margin="0,0,0,40"
@@ -634,26 +637,40 @@
         <Grid x:Name="FoldersGrid"/>
 
         <Grid x:Name="MarkerGrid" >
-
-            <Button x:Name="btnInfoShow" Content="Show" Click="btnInfoShow_Click" 
-                    HorizontalAlignment="Right" Height="36.797" Margin="0,6.203,5,0" VerticalAlignment="Top" Width="37.333"/>
-
-            <Button x:Name="btnInfoHide" Content="Hide" Click="btnInfoHide_Click" Visibility="Hidden"
-                    HorizontalAlignment="Right" Height="36.797" Margin="0,6.203,5,0" VerticalAlignment="Top" Width="37.333"/>
+            <Button x:Name="btnToRight" Content="&gt;" Margin="471.5,13,306.5,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Center" Width="22" Click="btnToRight_Click" RenderTransformOrigin="0.545,0.609"/>
+            <Button x:Name="btnToLeft" Content="&lt;" Margin="297.5,13,481.5,0" Height="25" Click="btnToLeft_Click" VerticalAlignment="Top" HorizontalAlignment="Center" Width="21"/>
             <StackPanel 
-        		Opacity="0.5"
+        		
         		Panel.ZIndex="1"
-        		MouseEnter="btnInfoShow_Click"
         		x:Name="PhotoInfoPanel" 
         		Orientation="Horizontal" 
         		HorizontalAlignment="Left"
         		VerticalAlignment="Stretch"
-        		Margin="-260.5,48,0,0" 
-        		Width="260" Background="#FF171717">
-
+        		Margin="-310,48,0,0" 
+        		Width="310" >
+                <StackPanel.Background>
+                    <SolidColorBrush Color="#FF171717" Opacity="0.7"/>
+                </StackPanel.Background>
                 <!-- SLIDE PANEL GRID -->
 
-                <Grid Width="220" HorizontalAlignment="Left" />
+                <Grid Width="310" HorizontalAlignment="Left" >
+
+                    <Grid HorizontalAlignment="Left" Height="20" Margin="56,184,0,0" VerticalAlignment="Top" Width="186">
+                        <Button x:Name="button10" TextBlock.TextAlignment="Left"
+                                Content="Show on map" HorizontalAlignment="Left" VerticalAlignment="Top" Width="212" Margin="0,0,-26,0" Click="button10_Click"/>
+                    </Grid>
+                    <Label x:Name="lblPhotoExtension" Foreground="Gray" FontSize="13" Content="Label" HorizontalAlignment="Left" Height="25" Margin="56,276,0,0" VerticalAlignment="Top" Width="105"/>
+                    <Label x:Name="lblRes" Foreground="White" FontSize="16" Content="Label" HorizontalAlignment="Left" Height="28" Margin="56,248,0,0" VerticalAlignment="Top" Width="213"/>
+                    <Label x:Name="lblCameraInfo" Foreground="White" FontSize="16" Content="Label" HorizontalAlignment="Left" Height="28" Margin="56,324,0,0" VerticalAlignment="Top" Width="105"/>
+                    <Label x:Name="lblCameraAddInfo" Foreground="Gray" FontSize="13" Content="Label" HorizontalAlignment="Left" Height="25" Margin="56,352,0,0" VerticalAlignment="Top" Width="105"/>
+                    <Label x:Name="lblCommentary" Foreground="White" FontSize="16" Content="Label" HorizontalAlignment="Left" Height="28" Margin="56,394,0,0" VerticalAlignment="Top" Width="105"/>
+                    <TextBox x:Name="lblDateTime" Background="Transparent" IsReadOnly="True" 
+                             HorizontalAlignment="Left" Height="73" Margin="56,38,0,0" TextWrapping="WrapWithOverflow" 
+                             Text="TextBox" VerticalAlignment="Top" Width="213" FontSize="25" Foreground="White" BorderThickness="0"/>
+                    <TextBox x:Name="lblPhotoPlace" Background="Transparent" IsReadOnly="True" ScrollViewer.CanContentScroll="False"
+                             HorizontalAlignment="Left" Height="35" Margin="56,144,0,0" TextWrapping="WrapWithOverflow" 
+                             Text="TextBox" VerticalAlignment="Top" Width="226" FontSize="22" Foreground="White" BorderThickness="0"/>
+                </Grid>
             </StackPanel>
             <Grid HorizontalAlignment="Left" Height="31.297" VerticalAlignment="Top" Width="33.5" Margin="10,10,0,0">
 
@@ -673,7 +690,7 @@
 
 
                 <Button x:Name="btnBackToMap" 
-                        Content="Button" RenderTransformOrigin="0.646,0.463" Margin="-6,0,-8.5,0.297" Click="btnBackToMap_Click">
+                        Content="" RenderTransformOrigin="0.646,0.463" Margin="-7.667,-9,-7.833,-7.369" Click="btnBackToMap_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Styles/ico_back.png"/>
                     </Button.Background>
@@ -692,35 +709,129 @@
                 </Button>
 
             </Grid>
+
+            <Grid x:Name="GridBtnInfoHideShow" 
+                  HorizontalAlignment="Right" Height="35" Margin="0,8,7.333,0" VerticalAlignment="Top" Width="35">
+
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Background" Value="#FF171717"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=btnInfoHide}" Value="True">
+                                <Setter Property="Background" Value="#2E2E2E" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=btnInfoShow}" Value="True">
+                                <Setter Property="Background" Value="#2E2E2E" />
+                            </DataTrigger>
+                        </Style.Triggers>
+
+                    </Style>
+                </Grid.Style>
+
+                <Button x:Name="btnInfoShow" Content="Show" Click="btnInfoShow_Click">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Styles/ico_info.png"/>
+                    </Button.Background>
+
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="btnInfoHide" Content="Hide" Click="btnInfoHide_Click" Visibility="Hidden">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Styles/ico_info.png"/>
+                    </Button.Background>
+
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
             <StackPanel x:Name="MapLabel" HorizontalAlignment="Left" Height="48" VerticalAlignment="Top" Width="117" Margin="48,0,0,0">
-                <Grid Height="47">
-                    <Label x:Name="label1" Foreground="White" Content="Map" Margin="0,6.667,36,0" FontSize="18"/>
+                <Grid Height="47" Margin="0,0,67,0" HorizontalAlignment="Center">
+                    <Label x:Name="label1" Foreground="White" Content="Map" Margin="0,7,0,0" FontSize="18"/>
                 </Grid>
             </StackPanel>
-            <Rectangle Fill="#FFCD6060" Margin="0,48,0,0"/>
+            <Rectangle x:Name="ImgRect" Margin="0,48,0,0">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding pathh}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Grid Height="31" Margin="218,6,232,0" VerticalAlignment="Top">
+                <Label x:Name="lblFileName" Foreground="White" FontSize="18" Margin="10,0,2,0" 
+            		Height="31" Width="129" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            </Grid>
+            <Grid HorizontalAlignment="Right" Height="32" Margin="0,0,46.5,50.333" VerticalAlignment="Bottom" Width="288">
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="btnFullScr" Content="[O]" HorizontalAlignment="Left" Width="32" Click="btnFullScr_Click"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin" Margin="32,0,0,0">
+                    <Button x:Name="btnMinScr" Content="[o]" HorizontalAlignment="Left" Width="32" Click="btnMinScr_Click"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin" Margin="64,0,0,0">
+                    <Button x:Name="button2" Content="1:1" HorizontalAlignment="Left" Width="32" Click="button2_Click"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin" Margin="96,0,0,0">
+                    <Button x:Name="btnScaleOut" Content="-" HorizontalAlignment="Left" Width="32"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" d:LayoutOverrides="TopMargin, BottomMargin"/>
+                <Grid Height="32" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin" Margin="128,0,153.667,0"/>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" Margin="128,0,0,0" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="btnScaleIn" Content="+" HorizontalAlignment="Left" Width="32"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" Margin="159.5,0,0,0" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="button6" Content="Button" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" Margin="191.5,0,0,0" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="button7" Content="Button" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" Margin="223.5,0,0,0" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="btnRotateLeft" Content="90L" HorizontalAlignment="Left" Width="32"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Width="32" Height="32" VerticalAlignment="Top" Margin="255.5,0,0,0" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                    <Button x:Name="btnRotateRight" Content="90R" HorizontalAlignment="Left" Width="32"/>
+                </Grid>
+            </Grid>
+
+
+            <!-- COMBO BOX FOR MAPS -->
+
+            <!-- MAP SMALL BUTTON -->
+
+            <!-- SMALL MAP GRID -->
+
+            <!-- PHOTOS BUTTON -->
+
+            <!-- PHOTOS GRID -->
+
+
+            <!-- FOLDERS BUTTON -->
+
+            <!-- FOLDERS GRID -->
+
+            <!-- OPTIONS -->
+
+            <!-- MAIN WINDOW GRID -->
         </Grid>
-
-
-        <!-- COMBO BOX FOR MAPS -->
-
-        <!-- MAP SMALL BUTTON -->
-
-        <!-- SMALL MAP GRID -->
-
-        <!-- PHOTOS BUTTON -->
-
-        <!-- PHOTOS GRID -->
-
-
-        <!-- FOLDERS BUTTON -->
-
-        <!-- FOLDERS GRID -->
-
-        <!-- OPTIONS -->
-
-        <!-- MAIN WINDOW GRID -->
     </Grid>
-
 
 
 
