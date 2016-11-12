@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="#FF8000" />
-    <SolidColorBrush x:Key="TMPWindowBorderBrush" Color="Navy" />
+    <SolidColorBrush x:Key="TMPWindowBorderBrush" Color="#FF171717" />
     <SolidColorBrush x:Key="TMPWindowBorderBrushInactive" Color="#999999" />
     <SolidColorBrush x:Key="TMPWindowStatusForeground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="TMPWindowStatusForegroundInactive" Color="#FFFFFF" />
@@ -72,7 +72,8 @@
                             Background="#EFEFF2"
                             
                             BorderBrush="{StaticResource TMPWindowBorderBrush}"
-                            BorderThickness="0"
+                            BorderThickness="1"
+                            
                             Padding="0">
                             <Border.Effect>
                                 <DropShadowEffect
@@ -154,7 +155,7 @@
                                                     StrokeThickness="1"
                                                     Stretch="None"
                                                     RenderOptions.EdgeMode="Aliased"
-                                                    Data="M2.70928766811593,10.8326666238173L11.5902731889944,10.8326666238172 11.5746486024492,2.2496267711292 2.62595725442389,2.24962671581606z"
+                                                    Data="M2.70928766811593,10.8326666238173L11.5902731889944,10.8326666238173 11.5902731889944,2.2496267711292 2.70928766811593,2.24962671581606z"
                                                     />
                                             </Grid>
                                         </Button>

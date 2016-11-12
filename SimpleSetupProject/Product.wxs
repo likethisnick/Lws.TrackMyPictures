@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define Lws.TrackMyPictures_TargetDir=$(var.Lws.TrackMyPictures.TargetDir)?>
+  <Product Id="4e0ad70f-90b0-4e71-bb5d-8da978450f38" Name="Track My Pictures" Language="1033" Version="1.0.0.0" Manufacturer="Fedorovskiy Roman" UpgradeCode="06b075cf-d766-47c5-947b-8f146922982e">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <Icon Id="Maps.ico" SourceFile="$(var.ProjectDir)Maps.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="Maps.ico"/>
+    
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\license.rtf"/>
+
+
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir"/>
+    
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="Track My Pictures" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="External_files" />
+      <ComponentRef Id="ApplicationShortcut"/>
+      <ComponentRef Id="ApplicationShortcutDesktop"/>
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Track My Pictures">
+            <Directory Id="External" Name="External" />
+        </Directory>
+      </Directory>
+    <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Track My Pictures"/>
+    </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+  <DirectoryRef Id="ApplicationProgramsFolder">
+    <Component Id="ApplicationShortcut" Guid="9bd13330-6540-406f-a3a8-d7f7c69ae7f9">
+      <Shortcut Id="ApplicationStartMenuShortcut" Name="Track My Pictures" Description="MyWpfApplication" Target="[INSTALLFOLDER]Lws.TrackMyPictures.exe" WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\TrackMyPictures" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </DirectoryRef>
+  <DirectoryRef Id="DesktopFolder">
+   <Component Id="ApplicationShortcutDesktop" Guid="cde1e030-eb64-49a5-b7b8-400b379c2d1a">
+     <Shortcut Id="ApplicationDesktopShortcut" Name="Track My Pictures" Description="MyWpfApplication" Target="[INSTALLFOLDER]Lws.TrackMyPictures.exe" WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveDesktopFolder" Directory="DesktopFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\TrackMyPictures" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </DirectoryRef>
+</Fragment>
+    
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <!-- <Component Id="ProductComponent"> -->
+      <!-- TODO: Insert files, registry keys, and other resources here. -->
+      <!-- </Component> -->
+      <Component Id="ExifLib.dll" Guid="f820d43a-3461-47ec-b651-fe9eb6da666b">
+        <File Id="ExifLib.dll" Name="ExifLib.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)ExifLib.dll" />
+      </Component>
+      <Component Id="GMap.NET.Core.dll" Guid="30948b68-e748-4222-8d94-db7780d2b7be">
+        <File Id="GMap.NET.Core.dll" Name="GMap.NET.Core.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)GMap.NET.Core.dll" />
+      </Component>
+      <Component Id="GMap.NET.WindowsPresentation.dll" Guid="375bc94b-c8d9-490d-b3c2-86f0d744ac88">
+        <File Id="GMap.NET.WindowsPresentation.dll" Name="GMap.NET.WindowsPresentation.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)GMap.NET.WindowsPresentation.dll" />
+      </Component>
+      <Component Id="Lws.TrackMyPictures.exe" Guid="1d3d8e90-0975-4fb6-a5a5-66d0c1aef17a">
+        <File Id="Lws.TrackMyPictures.exe" Name="Lws.TrackMyPictures.exe" Source="$(var.Lws.TrackMyPictures_TargetDir)Lws.TrackMyPictures.exe" />
+      </Component>
+      <Component Id="Lws.TrackMyPictures.exe.config" Guid="746d899f-3628-47c9-be1f-16a68daa5304">
+        <File Id="Lws.TrackMyPictures.exe.config" Name="Lws.TrackMyPictures.exe.config" Source="$(var.Lws.TrackMyPictures_TargetDir)Lws.TrackMyPictures.exe.config" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="External_files" Directory="External">
+      <Component Id="External_ExifLib.dll" Guid="614052a5-c381-4aba-9c48-8f32abb25396">
+        <File Id="External_ExifLib.dll" Name="ExifLib.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)External\ExifLib.dll" />
+      </Component>
+      <Component Id="External_GMap.NET.Core.dll" Guid="e48125f9-ee55-4594-b0cf-09fc8dfc6ce3">
+        <File Id="External_GMap.NET.Core.dll" Name="GMap.NET.Core.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)External\GMap.NET.Core.dll" />
+      </Component>
+      <Component Id="External_GMap.NET.WindowsPresentation.dll" Guid="f3354531-cea1-41f7-a0e5-e96573852f7d">
+        <File Id="External_GMap.NET.WindowsPresentation.dll" Name="GMap.NET.WindowsPresentation.dll" Source="$(var.Lws.TrackMyPictures_TargetDir)External\GMap.NET.WindowsPresentation.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
