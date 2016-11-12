@@ -9,7 +9,7 @@ namespace Lws.TrackMyPictures
     public class ExifInfo
     {
         public string FilePath;
-        public string photoTime;
+        public DateTime photoTime;
         public string photoPlace;
         public string Extension;
         public string FileSize;

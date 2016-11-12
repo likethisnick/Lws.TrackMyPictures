@@ -18,7 +18,6 @@ namespace Demo.WindowsPresentation
 #if DEBUG
       DateTime start;
       DateTime end;
-      int delta;
 
    //   private int counter;
    //   readonly Typeface tf = new Typeface("GenericSansSerif");

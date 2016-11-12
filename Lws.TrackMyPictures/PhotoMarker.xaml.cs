@@ -25,6 +25,8 @@ namespace Lws.TrackMyPictures
         public double fllength;
         public int photoWidth;
         public int photoHeight;
+        public int photoWidthT;
+        public int photoHeightT;
         public string Place;
         public double Lat;
         public double Long;
@@ -40,14 +42,17 @@ namespace Lws.TrackMyPictures
             this.InitializeComponent();
             DataContext = this;
             this.Marker = marker;
+            
             this.MainWindow = window;
             Extension = exifInfo.Extension;
             photoWidth = exifInfo.width;
             photoHeight = exifInfo.heigh;
+            photoWidthT = exifInfo.width;
+            photoHeightT = exifInfo.heigh;
             CameraInfo = exifInfo.CameraInfo;
             CameraInfoAdd = exifInfo.CameraInfoAdd;
             Place = exifInfo.photoPlace;
-            Date = exifInfo.photoTime;
+            Date = exifInfo.photoTime.ToShortDateString();
             Lat = exifInfo.Lat;
             Long = exifInfo.Long;
 
@@ -56,8 +61,16 @@ namespace Lws.TrackMyPictures
             fllength = new System.IO.FileInfo(Adress).Length;
             // ???????????????? в одном МБ 1048576 байт
             fllength = fllength / 1048576;
-
-
+                   BitmapImage bi = new BitmapImage();
+                   bi.BeginInit();
+                   bi.DecodePixelWidth = 240;
+                   bi.DecodePixelHeight = 220;
+                   bi.CacheOption = BitmapCacheOption.OnLoad;
+                   bi.UriSource = new Uri(Adress);
+                   bi.EndInit();
+            
+            image.Fill = new ImageBrush(bi);
+            
             Number = PhotoCounter;
             
             path = Adress;
@@ -72,6 +85,8 @@ namespace Lws.TrackMyPictures
             this.MouseMove += new MouseEventHandler(PhotoMarker_MouseMove);
             this.MouseLeftButtonDown += new MouseButtonEventHandler(PhotoMarker_MouseLeftButtonDown);
         }
+
+       
 
         private void PhotoMarker_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -88,18 +103,23 @@ namespace Lws.TrackMyPictures
             Label = null;
         }
 
+       
+
+
         public void PhotoMarker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            MainWindow.zoom = 1;
             MainWindow.MainMap.CanDragMap = false; // fix of map bug
 
             MainWindow.pathh = path;
               MainWindow.MapGrid.Visibility = Visibility.Hidden;
-               
-                MainWindow.MarkerGrid.Visibility = Visibility.Visible;
+            MainWindow.MapHide();
+
+            MainWindow.MarkerGrid.Visibility = Visibility.Visible;
             MainWindow.ChoosenOne = this;
             MainWindow.lblFileName.Content = Path.GetFileName(path);
             MainWindow.ImgRect.Fill = new ImageBrush(new BitmapImage(new Uri(path)));
-                ImageBrush[] a = new ImageBrush[MainWindow.MainMap.Markers.Count];
+            MainWindow.TurnZoomToOne();
 
             MainWindow.lblPhotoPlace.Text = Place;
             MainWindow.lblDateTime.Text = Date;
@@ -107,14 +127,8 @@ namespace Lws.TrackMyPictures
             MainWindow.lblRes.Content = photoWidth + "x" + photoHeight;
             MainWindow.lblCameraInfo.Content = CameraInfo;
             MainWindow.lblCameraAddInfo.Content = CameraInfoAdd;
+            MainWindow.lblFileAdress.Content = path;
 
-
-        }
-
-
-        public void ass()
-        {
-            System.Windows.Forms.MessageBox.Show("Test");
         }
 
 
